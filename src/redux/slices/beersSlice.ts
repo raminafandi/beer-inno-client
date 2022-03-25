@@ -8,14 +8,14 @@ export const getAsyncBeers = createAsyncThunk('beers/getAsyncBeers', async () =>
 
 interface BeersState {
     beers: BeerType[];
-    favorites: BeerType[];
+    favorites: number[];
     loading: boolean;
     error: string;
 }
 
 const initialState: BeersState = {
     beers: [],
-    favorites: [],
+    favorites: localStorage.getItem('favorites') ? JSON.parse(localStorage.getItem('favorites') || '') : [],
     loading: false,
     error: ""
 }
@@ -24,6 +24,17 @@ const beersSlice = createSlice({
     name: 'beers',
     initialState: initialState,
     reducers: {
+        onChangeFavorite: (state, action: PayloadAction<number>) => {
+            const { favorites } = state;
+            const id = action.payload;
+            const index = favorites.findIndex(item => item === id);
+            if (index === -1) {
+                state.favorites.push(id);
+            } else {
+                state.favorites.splice(index, 1);
+            }
+            localStorage.setItem('favorites', JSON.stringify(state.favorites));
+        }
     },
     extraReducers: (builder) => {
         // Add reducers for additional action types here, and handle loading state as needed
@@ -43,3 +54,4 @@ const beersSlice = createSlice({
 
 
 export default beersSlice.reducer;
+export const { onChangeFavorite } = beersSlice.actions;
