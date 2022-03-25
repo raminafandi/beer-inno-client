@@ -1,47 +1,38 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import api from '../api'
+import { useAppDispatch, useAppSelector } from '../redux';
+import { getAsyncBeers } from '../redux/slices/beersSlice';
+
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
 
 const Home = () => {
-    const [data, setData] = React.useState<"loading" | any[] | "nodata">("loading")
-    const [error, setError] = React.useState(null)
-
+    const beers = useAppSelector(state => state.beers.beers)
+    const dispatch = useAppDispatch();
     React.useEffect(() => {
-        (async () => {
-            const comingData = await api.beer.getBeers();
-            if (comingData.length > 0) {
-                setData(comingData)
-            }
-            else {
-                setData("nodata")
-            }
-        }
-        )()
-        console.log(data)
+        dispatch(getAsyncBeers());
     }, [])
 
-    let content;
-    switch (data) {
-        case "loading":
-            content = <div>Loading...</div>
-            break;
-        case "nodata":
-            content = <div>No data</div>
-            break;
-        default:
-            content = data.map((item: any) => {
-                return <li key={item.id}>
-                    <Link to={`/${item.id}`}>{item.name}</Link>
-                </li>
-            })
-    }
+    console.log(beers)
 
     return (
         <div>
             <div>Home</div>
-            <ul>
-                {content}
-            </ul>
+
+            <DataTable value={beers} paginator rows={10}  >
+                <Column field="id" header="Id" />
+                <Column field="name" header="Name" />
+                <Column field="tagline" header="Tagline" />
+                <Column field="first_brewed" header="First brewed" />
+                <Column field="description" header="Description" />
+                <Column field="image_url" header="Image url" />
+                <Column field="abv" header="Abv" />
+                <Column field="ibu" header="Ibu" />
+                <Column field="target_fg" header="Target fg" />
+                <Column field="target_og" header="Target og" />
+                <Column field="ebc" header="Ebc" />
+            </DataTable>
+
         </div>
     )
 }
