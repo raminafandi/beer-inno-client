@@ -41,7 +41,7 @@ const Home = () => {
     return (
         <div>
             <div className="card">
-                <DataTable value={beers} paginator rows={10} stripedRows showGridlines responsiveLayout={"stack"} onRowClick={(e) => navigate(`/${e.data.id}`)}>
+                <DataTable value={beers} paginator rows={10} stripedRows showGridlines responsiveLayout={"stack"} onRowClick={(e) => navigate(`/beer-inno-client/beers/${e.data.id}`)}>
                     <Column field="id" header="Id"></Column>
                     <Column field="image_url" header="Image" body={imageBody}></Column>
                     <Column field="name" header="Name"></Column>

@@ -14,8 +14,8 @@ function App() {
   return (
     <div className="App">
       <Routes >
-        <Route path="/" element={<Home />} />
-        <Route path="/:id" element={<Detailed />} />
+        <Route path="/beer-inno-client" element={<Home />} />
+        <Route path="/beer-inno-client/beers/:id" element={<Detailed />} />
       </Routes>
     </div>
   );
