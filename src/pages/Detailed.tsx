@@ -1,34 +1,45 @@
 import React, { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Chip } from 'primereact/chip';
-import { Panel } from 'primereact/panel';
+import { Button } from 'primereact/button';
 
 import 'primeicons/primeicons.css';
 import 'primereact/resources/themes/saga-blue/theme.css';
 import 'primereact/resources/primereact.css';
 import 'primeflex/primeflex.css';
 
-import { useAppSelector } from '../redux';
+import { useAppDispatch, useAppSelector } from '../redux';
 import { BeerType } from '../types';
 import { Image } from 'primereact/image';
+import { onChangeFavorite } from '../redux/slices/beersSlice';
 
 const Detailed = () => {
     const params = useParams();
+    const beerId = parseInt(params.id || '');
     const beers = useAppSelector(state => state.beers.beers)
+    const favorites = useAppSelector(state => state.beers.favorites)
     const [data, setData] = React.useState<BeerType>();
-
+    const dispatch = useAppDispatch()
+    const [isFavorite, setIsFavorite] = React.useState(favorites.includes(beerId));
     useEffect(() => {
         if (params.id && beers.length) {
-            console.log("id", params.id)
-            const beer = beers.find(b => b.id.toString() === params.id!);
+            const beer = beers.find(b => b.id === beerId);
             setData(beer);
         }
     }, [params.id, beers])
+
+    const onClickButton = () => {
+        dispatch(onChangeFavorite(beerId))
+        setIsFavorite(!isFavorite)
+    }
 
     return (
         <div className="container p-6">
             <div className='p-2'>
                 <Image className="img" src={data?.image_url} height="300" />
+            </div>
+            <div className='p-2'>
+                <Button label={isFavorite ? "Favorite" : "Add to favorites"} className={isFavorite ? 'p-button-warning' : 'p-button-outlined p-button-warning'} icon="pi pi-star" iconPos="right" onClick={() => onClickButton()} />
             </div>
             <div className="surface-0">
                 <div className="font-medium text-3xl text-900 mb-3">{data?.name}</div>
