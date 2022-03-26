@@ -1,16 +1,13 @@
 import axios from "../config/axios";
-import { BeerType } from "../types";
-import { AxiosResponse } from "axios"
 
-const getBeers = () => {
-    return axios
-        .get('/beers')
-        .then(({ data }) => {
-            return data;
-        })
-        .catch((error) => {
-            return error;
-        });
+const getBeers = async () => {
+    try {
+        const { data } = await axios.get("/beers");
+        return data;
+    }
+    catch (err) {
+        console.error(err);
+    }
 }
 
 const beer = { getBeers }

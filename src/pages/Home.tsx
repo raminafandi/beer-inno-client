@@ -1,7 +1,7 @@
-import React from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import React, { useCallback } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../redux';
-import { getAsyncBeers, onChangeFavorite } from '../redux/slices/beersSlice';
+import { onChangeFavorite } from '../redux/slices/beersSlice';
 
 import 'primeicons/primeicons.css';
 import 'primereact/resources/themes/saga-blue/theme.css';
@@ -11,30 +11,32 @@ import 'primeflex/primeflex.css';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Image } from 'primereact/image';
+import { DEFAULT_IMAGE_URL } from '../constants';
 
 
 const Home = () => {
+    const dispatch = useAppDispatch()
+    const navigate = useNavigate();
     const beers = useAppSelector(state => state.beers.beers)
     const favorites = useAppSelector(state => state.beers.favorites)
-    const dispatch = useAppDispatch()
 
-    const imageBody = (rowData: any) => {
-        const image = rowData.image_url ? rowData.image_url : 'https://via.placeholder.com/150';
+    const imageBody = useCallback((rowData: any) => {
+        const image = rowData.image_url ? rowData.image_url : DEFAULT_IMAGE_URL;
         return (<Image className="table-img" src={image} height="100" />)
-    }
+    }, [])
 
-    const favoriteBody = (rowData: any) => {
+    const favoriteBody = useCallback((rowData: any) => {
         const beerId = rowData.id;
         const isFavorite = favorites.includes(beerId);
         return (
-            <i className={`pi ${isFavorite ? 'pi-star-fill' : 'pi-star'}`} color={"#fccc55"} style={{ fontSize: 32 }} onClick={(e) => {
-                e.stopPropagation();
-                dispatch(onChangeFavorite(beerId))
-            }}>
+            <i className={`pi ${isFavorite ? 'pi-star-fill' : 'pi-star'}`} color={"#fccc55"} style={{ fontSize: 32 }}
+                onClick={(e) => {
+                    e.stopPropagation();
+                    dispatch(onChangeFavorite(beerId))
+                }}>
             </i>
         )
-    }
-    const navigate = useNavigate();
+    }, [dispatch, favorites])
 
     return (
         <div>

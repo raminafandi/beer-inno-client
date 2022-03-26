@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { Chip } from 'primereact/chip';
 import { Button } from 'primereact/button';
@@ -12,6 +12,7 @@ import { useAppDispatch, useAppSelector } from '../redux';
 import { BeerType } from '../types';
 import { Image } from 'primereact/image';
 import { onChangeFavorite } from '../redux/slices/beersSlice';
+import Row from '../components/Row';
 
 const Detailed = () => {
     const params = useParams();
@@ -22,16 +23,16 @@ const Detailed = () => {
     const dispatch = useAppDispatch()
     const [isFavorite, setIsFavorite] = React.useState(favorites.includes(beerId));
     useEffect(() => {
-        if (params.id && beers.length) {
+        if (beerId && beers.length) {
             const beer = beers.find(b => b.id === beerId);
             setData(beer);
         }
-    }, [params.id, beers])
+    }, [beerId, beers])
 
-    const onClickButton = () => {
+    const onClickButton = useCallback(() => {
         dispatch(onChangeFavorite(beerId))
         setIsFavorite(!isFavorite)
-    }
+    }, [isFavorite, beerId, dispatch]);
 
     return (
         <div className="container p-6">
@@ -44,46 +45,18 @@ const Detailed = () => {
             <div className="surface-0">
                 <div className="font-medium text-3xl text-900 mb-3">{data?.name}</div>
                 <ul className="list-none p-0 m-0">
-                    <li className="flex align-items-center py-2 px-2 border-top-1 border-300 flex-wrap">
-                        <div className="text-500 w-6 md:w-2 font-medium">Title</div>
-                        <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">{data?.name}</div>
-                    </li>
-                    <li className="flex align-items-center py-3 px-2 border-top-1 border-300 flex-wrap">
-                        <div className="text-500 w-6 md:w-2 font-medium">Tagline</div>
-                        <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">{data?.tagline}</div>
-                    </li>
-                    <li className="flex align-items-center py-3 px-2 border-top-1 border-300 flex-wrap">
-                        <div className="text-500 w-6 md:w-2 font-medium">First Brewed</div>
-                        <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">{data?.first_brewed}</div>
-                    </li>
-                    <li className="flex align-items-center py-3 px-2 border-top-1 border-300 flex-wrap">
-                        <div className="text-500 w-6 md:w-2 font-medium">Description</div>
-                        <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">{data?.description}</div>
-                    </li>
-                    <li className="flex align-items-center py-3 px-2 border-top-1 border-300 flex-wrap">
-                        <div className="text-500 w-6 md:w-2 font-medium">ABV</div>
-                        <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">{data?.abv}</div>
-                    </li>
-                    <li className="flex align-items-center py-3 px-2 border-top-1 border-300 flex-wrap">
-                        <div className="text-500 w-6 md:w-2 font-medium">IBU</div>
-                        <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">{data?.ibu}</div>
-                    </li>
-                    <li className="flex align-items-center py-3 px-2 border-top-1 border-300 flex-wrap">
-                        <div className="text-500 w-6 md:w-2 font-medium">Target FG</div>
-                        <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">{data?.target_fg}</div>
-                    </li>
-                    <li className="flex align-items-center py-3 px-2 border-top-1 border-300 flex-wrap">
-                        <div className="text-500 w-6 md:w-2 font-medium">Target OG</div>
-                        <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">{data?.target_og}</div>
-                    </li>
-                    <li className="flex align-items-center py-3 px-2 border-top-1 border-300 flex-wrap">
-                        <div className="text-500 w-6 md:w-2 font-medium">PH</div>
-                        <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">{data?.ph}</div>
-                    </li>
-                    <li className="flex align-items-center py-3 px-2 border-top-1 border-300 flex-wrap">
-                        <div className="text-500 w-6 md:w-2 font-medium">Attenuation Level</div>
-                        <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">{data?.attenuation_level}</div>
-                    </li>
+                    <Row title="Name" value={data?.name} />
+                    <Row title="Tagline" value={data?.tagline} />
+                    <Row title="Description" value={data?.description} />
+                    <Row title="First brewed" value={data?.first_brewed} />
+                    <Row title="IBU" value={data?.ibu} />
+                    <Row title="ABV" value={data?.abv} />
+                    <Row title="PH" value={data?.ph} />
+                    <Row title="Attenuation level" value={data?.attenuation_level} />
+                    <Row title="Target FG" value={data?.target_fg} />
+                    <Row title="Target OG" value={data?.target_og} />
+                    <Row title="Volume" value={`${data?.volume.value} ${data?.volume.unit}`} />
+                    <Row title="Boil Volume" value={`${data?.boil_volume.value} ${data?.boil_volume.unit}`} />
                     <li className="flex align-items-center py-3 px-2 border-top-1 border-300 flex-wrap">
                         <div className="text-500 w-6 md:w-2 font-medium">Food Pairings</div>
                         <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">
@@ -92,31 +65,9 @@ const Detailed = () => {
                             })}
                         </div>
                     </li>
-                    <li className="flex align-items-center py-3 px-2 border-top-1 border-300 flex-wrap">
-                        <div className="text-500 w-6 md:w-2 font-medium">Volume</div>
-                        <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">{`${data?.volume.value} ${data?.volume.unit}`}</div>
-                    </li>
-                    <li className="flex align-items-center py-3 px-2 border-top-1 border-300 flex-wrap">
-                        <div className="text-500 w-6 md:w-2 font-medium">Boil Volume</div>
-                        <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">{`${data?.boil_volume.value} ${data?.boil_volume.unit}`}</div>
-                    </li>
-                    <li className="flex align-items-center py-3 px-2 border-top-1 border-bottom-1 border-300 flex-wrap">
-                        <div className="text-500 w-6 md:w-2 font-medium">Brewers Tips</div>
-                        <div className="text-900 w-full md:w-8 md:flex-order-0 flex-order-1 line-height-3">
-                            {data?.brewers_tips}
-                        </div>
-                    </li>
+                    <Row title="Brewers tips" value={data?.brewers_tips} />
                 </ul>
             </div>
-            {/* <div>
-                <p>{}</p>
-                <p>{}</p>
-                <p>{data?.description}</p>
-                <p>{data?.first_brewed}</p>
-                <p>ABV: {data?.abv}</p>
-                <p>IBU: {data?.ibu}</p>
-                <p>{data?.first_brewed}</p>
-            </div> */}
         </div>
     )
 }

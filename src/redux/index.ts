@@ -5,7 +5,6 @@ import beersSlice from "./slices/beersSlice";
 const store = configureStore(
     {
         reducer: {
-            // Add reducers here
             beers: beersSlice
         },
         devTools: process.env.NODE_ENV !== "production"

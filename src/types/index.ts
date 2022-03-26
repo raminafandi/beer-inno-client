@@ -24,3 +24,8 @@ export type BeerType = {
     food_pairing: string[],
     brewers_tips: string,
 }
+
+export type RowProps = {
+    title: string,
+    value: string | number | boolean | undefined,
+}

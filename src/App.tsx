@@ -10,7 +10,7 @@ function App() {
   const dispatch = useAppDispatch();
   React.useEffect(() => {
     dispatch(getAsyncBeers());
-  }, [])
+  }, [dispatch])
   return (
     <div className="App">
       <Routes >
