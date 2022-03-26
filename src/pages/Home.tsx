@@ -16,10 +16,7 @@ import { Image } from 'primereact/image';
 const Home = () => {
     const beers = useAppSelector(state => state.beers.beers)
     const favorites = useAppSelector(state => state.beers.favorites)
-    const dispatch = useAppDispatch();
-    React.useEffect(() => {
-        !beers.length && dispatch(getAsyncBeers());
-    }, [])
+    const dispatch = useAppDispatch()
 
     const imageBody = (rowData: any) => {
         const image = rowData.image_url ? rowData.image_url : 'https://via.placeholder.com/150';

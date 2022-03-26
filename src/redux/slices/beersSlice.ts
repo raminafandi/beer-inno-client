@@ -37,7 +37,6 @@ const beersSlice = createSlice({
         }
     },
     extraReducers: (builder) => {
-        // Add reducers for additional action types here, and handle loading state as needed
         builder.addCase(getAsyncBeers.pending, (state: BeersState) => {
             state.loading = true;
         });
